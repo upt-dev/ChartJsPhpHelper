@@ -1,0 +1,30 @@
+{
+    "name": "yusrilhs/chartjs-php-helper",
+    "description": "A Simple Helper for Chart.js using PHP",
+    "keywords": [
+        "chartjs",
+        "php",
+        "helper"
+    ],
+    "version": "1.0.0",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Yusril Herlian Syah",
+            "email": "yusrilhsyah@gmail.com"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "^6.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "YusrilHs\\ChartJsHelper\\": "src/"
+        },
+        "files": [
+            "src/utils.php"
+        ]
+    }
+}
