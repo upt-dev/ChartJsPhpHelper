@@ -1,2 +1,2 @@
 # ChartJsPhpHelper
-A Simple Helper Chart.js using PHP
+A Simple Helper for Chart.js using PHP
