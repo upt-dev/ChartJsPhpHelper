@@ -61,9 +61,18 @@ class ChartJsLibTest extends PHPUnit_Framework_TestCase {
 
     public function testUseFillZero() {
         $chart = ChartJsHelper::createChart('line');
+        $labels = array('January', 'February');
+        $chart->setLabels($labels);
         $this->assertEquals($chart->usingFillZero(), false);
         $chart->useFillZero();
         $this->assertEquals($chart->usingFillZero(), true);
+
+        $dataset = $chart->createDataset('data_january', 'January');
+        $this->assertEquals(count($labels), count($dataset->getData()));
+
+        foreach ($dataset->getData() as $value) {
+            $this->assertEquals($value, 0);
+        }
     }
 
     public function testUseRainbowColor() {
@@ -71,5 +80,22 @@ class ChartJsLibTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($chart->usingRainbowColor(), false);
         $chart->useRainbowColor();
         $this->assertEquals($chart->usingRainbowColor(), true);
+    }
+
+    public function testCreateDataset() {
+        $chart = ChartjsHelper::createChart('line');
+        $dataset = $chart->createDataset('data_january', 'January');
+        $this->assertEquals($chart->hasDataset('data_january'), true);
+        $this->assertEquals($chart->dataset('data_january'), $dataset);
+
+        $this->expectException(InvalidArgumentException::class);
+        $chart->createDataset('data_january', 'January');
+    }
+
+    public function testInvalidDataset() {
+        $chart = ChartjsHelper::createChart('line');
+        
+        $this->expectException(InvalidArgumentException::class);
+        $chart->dataset('any_data');
     }
 }
