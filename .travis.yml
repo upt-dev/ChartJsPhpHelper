@@ -1,0 +1,13 @@
+language: php
+php:
+  - '5.3'
+  - '7.1'
+  - hhvm # on Trusty only
+  - nightly
+before_script:
+    - travis_retry composer self-update
+    - travis_retry composer install --no-interaction --prefer-source --dev
+
+script:
+    - vendor/bin/phpunit
+
