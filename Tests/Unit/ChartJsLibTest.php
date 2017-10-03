@@ -154,4 +154,43 @@ class ChartJsLibTest extends TestCase {
         $this->assertEquals(count($config['data']['datasets']), 2);
         $this->assertEquals($config['options'], $options);
     }
+
+    public function testGetConfigPieChart() {
+        $sampleData = array(
+            'Like'=> rand(20, 100),
+            'Hate'=> rand(20, 100),
+            'Simple'=> rand(20, 100)
+        );
+        $colorMap = array(
+            'Like'=> 'rgba(237,35,73,.6)',
+            'Hate'=> 'rgba(56,140,203,.6)',
+            'Simple'=> 'rgba(82,203,56,.6)'
+        );
+        
+        $chart = ChartJsHelper::createChart('pie');
+        $chart2 = ChartJsHelper::createChart('pie');
+
+        $chart->setLabels(array_keys($sampleData));
+        $chart2->setLabels(array_keys($sampleData));
+        
+        $chart->useFillZero();
+        $chart2->useFillZero();
+        
+        $chart2->useRainbowColor();
+
+        $dataset = $chart->createDataset('vote', 'vote');
+        $dataset2 = $chart2->createDataset('vote', 'vote');
+        $dataset->setData(array_values($sampleData));
+        $dataset2->setData(array_values($sampleData));
+        $dataset->setProperties(array('backgroundColor'=> array_values($colorMap)));
+
+        $config = $chart->getConfig();
+        $config2 = $chart2->getConfig();
+
+        $this->assertEquals(count($config['data']['datasets'][0]['data']), count($sampleData));
+        $this->assertEquals(count($config2['data']['datasets'][0]['data']), count($sampleData));
+
+        $this->assertEquals(count($config['data']['datasets'][0]['backgroundColor']), count($sampleData));
+        $this->assertEquals(count($config2['data']['datasets'][0]['backgroundColor']), count($sampleData));
+    }
 }
