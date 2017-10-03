@@ -9,8 +9,12 @@ php:
   - 7.1
   - nightly
 
-before_install:
-  - composer dump-autoload
+matrix:
+  include:
+    - php: 5.3
+      dist: precise
+
+before_script: composer dump-autoload
 
 script: phpunit --coverage-clover=coverage.xml
 
