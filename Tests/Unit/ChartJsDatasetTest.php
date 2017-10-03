@@ -81,4 +81,25 @@ class ChartJsDatasetTest extends PHPUnit_Framework_TestCase {
         ));   
     }
 
+    public function testSetData() {
+        $chart = ChartJsHelper::createChart('line');
+        $chart->setLabels(array('January', 'February', 'Maret', 'April'));
+        $dataset = $chart->createDataset('2017', '2017');
+        $dataset->setData(array(4, 10, 2, 13));
+        $this->assertEquals($chart->dataset('2017')->getData(), array(4, 10, 2, 13));
+        $dataset->setData(1, 31);
+        $this->assertEquals($chart->dataset('2017')->getData(), array(4, 31, 2, 13));
+        $this->expectException('InvalidArgumentException');
+        $chart->dataset('2017')->setData(10, 20);
+    }
+
+    public function testAppendData() {
+        $chart = ChartJsHelper::createChart('line');
+        $chart->setLabels(array('January', 'February', 'Maret', 'April'));
+        $dataset = $chart->createDataset('2017', '2017');
+        $dataset->appendData(20);
+        $this->assertEquals($chart->dataset('2017')->getData(), array(20));
+        $dataset->appendData(21);
+        $this->assertEquals($chart->dataset('2017')->getData(), array(20, 21));
+    }
 }
