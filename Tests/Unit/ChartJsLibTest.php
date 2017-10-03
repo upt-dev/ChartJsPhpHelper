@@ -17,7 +17,7 @@ class ChartJsLibTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(count($labels), count($chart->getLabels()));
 
         // Test invalid set labels using an associative array
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException('InvalidArgumentException');
         $chart->setLabels($invalidLabels);
     }
 
@@ -88,14 +88,14 @@ class ChartJsLibTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($chart->hasDataset('data_january'), true);
         $this->assertEquals($chart->dataset('data_january'), $dataset);
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException('InvalidArgumentException');
         $chart->createDataset('data_january', 'January');
     }
 
     public function testInvalidDataset() {
         $chart = ChartjsHelper::createChart('line');
         
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException('InvalidArgumentException');
         $chart->dataset('any_data');
     }
 }

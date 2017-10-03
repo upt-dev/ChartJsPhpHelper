@@ -30,7 +30,7 @@ class ChartJsDatasetTest extends PHPUnit_Framework_TestCase {
                     )
         );
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException('InvalidArgumentException');
         $dataset->setProperty('data', array(1,2));
     }
 
@@ -60,7 +60,7 @@ class ChartJsDatasetTest extends PHPUnit_Framework_TestCase {
     public function testSetPropertiesUsingSequenceArray() {
         $chart = ChartJsHelper::createChart('line');
         $dataset = $chart->createDataset('data_january', 'January');
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException('InvalidArgumentException');
         $dataset->setProperties(array(
             array(
                     'backgroundColor' => 'rgba(0,0,0,.4)', 
@@ -72,7 +72,7 @@ class ChartJsDatasetTest extends PHPUnit_Framework_TestCase {
     public function testSetPropertiesWithDataAndLabel() {
         $chart = ChartJsHelper::createChart('line');
         $dataset = $chart->createDataset('data_january', 'January');
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException('InvalidArgumentException');
         $dataset->setProperties(array(
             'backgroundColor' => 'rgba(0,0,0,.4)', 
             'borderColor' => 'rgba(0,0,0,.8)',

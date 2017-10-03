@@ -22,7 +22,7 @@ class ChartJsHelperTest extends PHPUnit_Framework_TestCase {
         $this->assertInstanceOf('YusrilHs\\ChartjsHelper\\ChartJsLib', $polarChart);
         $this->assertInstanceOf('YusrilHs\\ChartjsHelper\\ChartJsLib', $radarChart);
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException('InvalidArgumentException');
         $invalidChart = ChartjsHelper::createChart('invalid chart');
     }
     
