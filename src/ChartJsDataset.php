@@ -32,7 +32,7 @@ class ChartJsDataset {
     }
 
     /**
-     * Set property of datasets
+     * Set property on datasets
      * @param string $key   
      * @param string $value 
      */
@@ -61,7 +61,7 @@ class ChartJsDataset {
     }
 
     /**
-     * Retrieve properties of dataset
+     * Retrieve properties on dataset
      * @return array
      */
     public function getProperties() {
@@ -69,7 +69,7 @@ class ChartJsDataset {
     }
 
     /**
-     * Retrieve label of dataset
+     * Retrieve label on dataset
      * @return string
      */
     public function getLabel() {
@@ -77,19 +77,30 @@ class ChartJsDataset {
     }
 
     /**
-     * Set data of datasets
-     * @param number            $index 
-     * @param boolean|number    $value 
+     * Set data on dataset
+     * @param number|array      $index 
+     * @param boolean|any       $value 
      */
     public function setData($index, $value = false) {
-        if ($value !== false && count($this->data) === 0) {
-            throw new InvalidArgumentException('You must use zeroFill if setData using index');
+        if ($value !== false) {
+            if (!isset($this->data[$index])) {
+                throw new InvalidArgumentException(sprintf('Data with index %d is not defined', $index));
+            }
         }
 
         // Set all data
         if ($value === false) $this->data = $index;
         // Set data on index
         else $this->data[$index] = $value;
+    }
+
+    /**
+     * Append data on datasets
+     * @param  any    $value 
+     * @return void        
+     */
+    public function appendData($value) {
+        array_push($this->data, $value);
     }
 
     /**
