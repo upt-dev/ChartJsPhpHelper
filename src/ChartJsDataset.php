@@ -37,15 +37,15 @@ class ChartJsDataset {
      * @param string $value 
      */
     public function setProperty($key, $value) {
-        if ($value == 'data' || $value == 'label') {
-            throw new InvalidArgumentException(sprintf('You couldn\'t using %s on setProperty', $key));
+        if ($key == 'data' || $key == 'label') {
+            throw new InvalidArgumentException(sprintf('Couldn\'t using %s on setProperty', $key));
         }
 
         $this->properties[$key] = $value;
     }
 
     /**
-     * Set properties if datasets
+     * Set properties
      * @param array $properties
      */
     public function setProperties($properties) {
@@ -53,7 +53,19 @@ class ChartJsDataset {
             throw new InvalidArgumentException('Argument must be an array associative');
         }
 
+        if (isset($properties['data']) || isset($properties['label'])) {
+            throw new InvalidArgumentException('Couldn\'t set property label or data on setProperties');
+        }
+
         $this->properties = $properties;
+    }
+
+    /**
+     * Retrieve properties of dataset
+     * @return array
+     */
+    public function getProperties() {
+        return $this->properties;
     }
 
     /**
@@ -78,5 +90,13 @@ class ChartJsDataset {
         if ($value === false) $this->data = $index;
         // Set data on index
         else $this->data[$index] = $value;
+    }
+
+    /**
+     * Get data on dataset
+     * @return array
+     */
+    public function getData() {
+        return $this->data;
     }
 }
