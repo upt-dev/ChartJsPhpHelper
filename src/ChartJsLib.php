@@ -1,7 +1,7 @@
 <?php 
 namespace YusrilHs\ChartJsHelper;
 
-use YusrilHs\ChartJsHelper\ChartDataset;
+use YusrilHs\ChartJsHelper\ChartJsDataset;
 use InvalidArgumentException;
 
 class ChartJsLib {
@@ -120,23 +120,17 @@ class ChartJsLib {
     }
 
     /**
-     * Set dataset
-     * @param string $name 
+     * Create dataset
+     * @param string $id
+     * @param string $label 
      */
-    public function dataset($name, $rename = false) {
-        $founded = false;
-
-        foreach ($this->datasets as $dataset) {
-            if ($dataset->getLabel() == $name) {
-                $founded = $dataset;
-                break;
-            }
+    public function createDataset($id, $label) {
+        if ($this->hasDataset($id)) {
+            throw new InvalidArgumentException(sprintf('Dataset %s is already defined', $id));
         }
-        
-        if ($founded) return $founded;
 
-        $dataset = new ChartDataset($name);
-        array_push($this->datasets, $dataset);
+        $dataset = new ChartJsDataset($label);
+        $this->datasets[$id] = $dataset;
 
         if ($this->usingFillZero()) {
             $dataset->setData(array_fill(0, count($this->labels), 0));
@@ -146,11 +140,33 @@ class ChartJsLib {
     }
 
     /**
+     * Retrieve dataset by id
+     * @param  string $id [description]
+     * @return YusrilHs\ChartJsHelper\ChartJsDataset
+     */
+    public function dataset($id) {
+        if (!$this->hasDataset($id)) {
+            throw new InvalidArgumentException(sprintf('Dataset %s is not defined', $id));
+        }
+
+        return $this->datasets[$id];
+    }
+
+    /**
+     * Check dataset is defined
+     * @param  string  $id 
+     * @return boolean     
+     */
+    public function hasDataset($id) {
+        return isset($this->datasets[$id]);
+    }
+
+    /**
      * Generate chart configuration
      * @return array
      */
     public function generate() {
-        
+
     }
 
 }
