@@ -1,8 +1,8 @@
 <?php 
-
+use PHPUnit\Framework\TestCase;
 use YusrilHs\ChartJsHelper\ChartJsHelper;
 
-class ChartJsHelperTest extends PHPUnit_Framework_TestCase {
+class ChartJsHelperTest extends TestCase {
 
     public function testCreateChart() {
         $barChart = ChartjsHelper::createChart('bar');

@@ -1,8 +1,8 @@
 <?php 
-
+use PHPUnit\Framework\TestCase;
 use YusrilHs\ChartJsHelper\ChartJsHelper;
 
-class ChartJsDatasetTest extends PHPUnit_Framework_TestCase {
+class ChartJsDatasetTest extends TestCase {
 
     public function testGetLabel() {
         $chart = ChartJsHelper::createChart('line');
@@ -30,13 +30,8 @@ class ChartJsDatasetTest extends PHPUnit_Framework_TestCase {
                     )
         );
 
-        try {
-            $dataset->setProperty('data', array(1,2));
-        } catch(InvalidArgumentException $e) {
-            return;
-        }
-
-        $this->fail();
+        $this->expectException('InvalidArgumentException');
+        $dataset->setProperty('data', array(1,2));
     }
 
     public function testSetProperties() {
@@ -65,35 +60,25 @@ class ChartJsDatasetTest extends PHPUnit_Framework_TestCase {
     public function testSetPropertiesUsingSequenceArray() {
         $chart = ChartJsHelper::createChart('line');
         $dataset = $chart->createDataset('data_january', 'January');
-        try {
-            $dataset->setProperties(array(
-                array(
-                        'backgroundColor' => 'rgba(0,0,0,.4)', 
-                        'borderColor' => 'rgba(0,0,0,.8)'
-                    )
-            ));   
-        } catch(InvalidArgumentException $e) {
-            return;
-        }
-
-        $this->fail();
+        $this->expectException('InvalidArgumentException');
+        $dataset->setProperties(array(
+            array(
+                    'backgroundColor' => 'rgba(0,0,0,.4)', 
+                    'borderColor' => 'rgba(0,0,0,.8)'
+                )
+        ));   
     }
 
     public function testSetPropertiesWithDataAndLabel() {
         $chart = ChartJsHelper::createChart('line');
         $dataset = $chart->createDataset('data_january', 'January');
-        try {
-            $dataset->setProperties(array(
-                'backgroundColor' => 'rgba(0,0,0,.4)', 
-                'borderColor' => 'rgba(0,0,0,.8)',
-                'label'=>'January',
-                'data'=> array(0,1)
-            ));   
-        } catch(InvalidArgumentException $e) {
-            return;
-        }
-
-        $this->fail();
+        $this->expectException('InvalidArgumentException');
+        $dataset->setProperties(array(
+            'backgroundColor' => 'rgba(0,0,0,.4)', 
+            'borderColor' => 'rgba(0,0,0,.8)',
+            'label'=>'January',
+            'data'=> array(0,1)
+        ));   
     }
 
     public function testSetData() {

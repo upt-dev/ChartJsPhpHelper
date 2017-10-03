@@ -1,8 +1,8 @@
 <?php 
-
+use PHPUnit\Framework\TestCase;
 use YusrilHs\ChartJsHelper\ChartJsHelper;
 
-class ChartJsLibTest extends PHPUnit_Framework_TestCase {
+class ChartJsLibTest extends TestCase {
     public function testSetLabels() {
         $labels = array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
         $invalidLabels = array(
@@ -17,13 +17,8 @@ class ChartJsLibTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(count($labels), count($chart->getLabels()));
 
         // Test invalid set labels using an associative array
-        try {
-            $chart->setLabels($invalidLabels);
-        } catch(InvalidArgumentException $e) {
-            return;
-        }
-
-        $this->fail();
+        $this->expectException('InvalidArgumentException');
+        $chart->setLabels($invalidLabels);
     }
 
     public function testSetOptions() {
@@ -105,13 +100,8 @@ class ChartJsLibTest extends PHPUnit_Framework_TestCase {
     public function testInvalidDataset() {
         $chart = ChartjsHelper::createChart('line');
         
-        try {
-            $chart->dataset('2018');
-        } catch(InvalidArgumentException $e) {
-            return;
-        }
-
-        $this->fail();
+        $this->expectException('InvalidArgumentException');
+        $chart->dataset('2018');
     }
 
     public function testGetConfig() {

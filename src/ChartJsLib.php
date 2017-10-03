@@ -173,8 +173,8 @@ class ChartJsLib {
             )
         );
 
-        if (!empty($this->getLabels())) {
-            $config['data']['labels'] = $this->getLabels();
+        if (!empty($this->labels)) {
+            $config['data']['labels'] = $this->labels;
         }
 
         // Index if that using rainbowColor
@@ -182,7 +182,7 @@ class ChartJsLib {
 
         foreach ($this->datasets as $dataset) {
             $chartDataset = $dataset->getProperties();
-            if (!empty($dataset->getLabel())) {
+            if (strlen($dataset->getLabel()) > 0) {
                 $chartDataset['label'] = $dataset->getLabel();
             }
             $chartDataset['data'] = $dataset->getData();

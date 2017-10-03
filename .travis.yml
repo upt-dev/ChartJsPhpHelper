@@ -2,17 +2,10 @@ language: php
 sudo: false
 dist: trusty
 php:
-  - 5.3
-  - 5.4
   - 5.6
   - 7.0
   - 7.1
   - nightly
-
-matrix:
-  include:
-    - php: 5.3
-      dist: precise
 
 before_script: composer dump-autoload
 
