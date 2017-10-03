@@ -16,7 +16,7 @@ class ChartJsLib {
      * Type of chart
      * @var string
      */
-    protected $chartType = '';
+    private $chartType = '';
 
     /**
      * Chart.js options
@@ -165,8 +165,67 @@ class ChartJsLib {
      * Generate chart configuration
      * @return array
      */
-    public function generate() {
+    public function getConfig() {
+        $config = array(
+            'type' => $this->chartType,
+            'data'=> array(
+                'datasets'=> array()
+            )
+        );
 
+        if (!empty($this->getLabels())) {
+            $config['data']['labels'] = $this->getLabels();
+        }
+
+        // Index if that using rainbowColor
+        $index = 1;
+
+        foreach ($this->datasets as $dataset) {
+            $chartDataset = $dataset->getProperties();
+            if (!empty($dataset->getLabel())) {
+                $chartDataset['label'] = $dataset->getLabel();
+            }
+            $chartDataset['data'] = $dataset->getData();
+            
+            if ($this->usingRainbowColor()) {
+                if (in_array($this->chartType, array('doughnut', 'pie', 'polarArea'))) {
+                    $chartDataset['backgroundColor'] = array();
+                    foreach ($chartDataset['data'] as $key => $value) {
+                        array_push($chartDataset['backgroundColor'], $this->getCalcRainbow(count($chartDataset['data']), $index));
+                        $index++;
+                    }
+                    $index = 1;
+                } else {
+                    $color = $this->getCalcRainbow(count($this->datasets), $index);
+                    $chartDataset['backgroundColor'] = $color;
+                    $chartDataset['borderColor'] = $color;
+                    $index++;
+                }
+            }
+
+            array_push($config['data']['datasets'], $chartDataset);
+        }
+
+        if (!empty($this->options)) {
+            $config['options'] = $this->options;
+        }
+
+        return $config;
+    }
+
+    /**
+     * Calculate rainbow color
+     * @param  number $numberOfData 
+     * @param  number $index        
+     * @return string               
+     */
+    private function getCalcRainbow($numberOfData, $index) {
+        $frequency = 6 / $numberOfData;
+        $red = floor(sin($frequency * $index + 0) * (127) + 128);
+        $green = floor(sin($frequency * $index + 1) * (127) + 128);
+        $blue = floor(sin($frequency * $index + 3) * (127) + 128);
+
+        return sprintf('rgba(%s,%s,%s,.6)',$red, $green, $blue);
     }
 
 }
