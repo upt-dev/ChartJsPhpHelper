@@ -14,7 +14,6 @@ class ChartJsHelper {
         'bar',
         'doughnut',
         'line',
-        'mixed',
         'pie',
         'polarArea',
         'radar',
