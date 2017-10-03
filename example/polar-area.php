@@ -35,7 +35,7 @@ $dataset->setProperties(array('backgroundColor'=> array_values($colorMap)));
 <body>
     <canvas id="chart"></canvas>
     <canvas id="chart2"></canvas>
-    <script type="text/javascript" src="assets/Chart.bundle.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js"></script>
     <script type="text/javascript">
         window.onload = function() {
             var ctx = document.getElementById("chart").getContext("2d");
