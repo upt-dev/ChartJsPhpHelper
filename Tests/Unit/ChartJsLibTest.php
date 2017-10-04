@@ -11,10 +11,11 @@ class ChartJsLibTest extends TestCase {
         );
 
         $chart = ChartjsHelper::createChart('line');
+        $chart->setLabels($labels);
+        $config = $chart->getConfig();
 
         // Test using sequence array
-        $chart->setLabels($labels);
-        $this->assertEquals(count($labels), count($chart->getLabels()));
+        $this->assertEquals(count($labels), count($config['data']['labels']));
 
         // Test invalid set labels using an associative array
         $this->expectException('InvalidArgumentException');
@@ -56,17 +57,15 @@ class ChartJsLibTest extends TestCase {
 
         $chart = ChartjsHelper::createChart('line');
         $chart->setOptions($options);
-        $this->assertEquals($options, $chart->getOptions());
+        $config = $chart->getConfig();
+        $this->assertEquals($options, $config['options']);
     }
 
     public function testUseFillZero() {
         $chart = ChartJsHelper::createChart('line');
         $labels = array('January', 'February');
         $chart->setLabels($labels);
-        $this->assertEquals($chart->usingFillZero(), false);
         $chart->useFillZero();
-        $this->assertEquals($chart->usingFillZero(), true);
-
         $dataset = $chart->createDataset('2017', '2017');
         $this->assertEquals(count($labels), count($dataset->getData()));
 
@@ -77,9 +76,16 @@ class ChartJsLibTest extends TestCase {
 
     public function testUseRainbowColor() {
         $chart = ChartJsHelper::createChart('line');
-        $this->assertEquals($chart->usingRainbowColor(), false);
+        $chart->setLabels(array('January', 'February', 'March', 'April'));
+        $chart->useFillZero();
+        $dataset = $chart->createDataset('2017','2017');
+        $dataset->setProperty('backgroundColor', 'rgba(0,0,0,1)');
+        $config = $chart->getConfig();
+
+        $this->assertEquals($config['data']['datasets'][0]['backgroundColor'], 'rgba(0,0,0,1)');
         $chart->useRainbowColor();
-        $this->assertEquals($chart->usingRainbowColor(), true);
+        $config = $chart->getConfig();
+        $this->assertNotEquals($config['data']['datasets'][0]['backgroundColor'], 'rgba(0,0,0,1)');
     }
 
     public function testCreateDataset() {
