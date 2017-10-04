@@ -28,13 +28,13 @@ class ChartJsLib {
      * Fill zero
      * @var array
      */
-    protected $fillZero = false;
+    protected $useFillZero = false;
 
     /**
      * Rainbow color
      * @var boolean
      */
-    protected $rainbowColor = false;
+    protected $useRainbowColor = false;
 
     /**
      * Datasets of chart
@@ -63,14 +63,6 @@ class ChartJsLib {
     }
 
     /**
-     * Retrieve labels of Chart
-     * @return array        
-     */
-    public function getLabels() {
-        return $this->labels;
-    }
-
-    /**
      * Set options of chart
      * @param array $opts
      */
@@ -79,27 +71,11 @@ class ChartJsLib {
     }
 
     /**
-     * Retrieve options of chart
-     * @return array
-     */
-    public function getOptions() {
-        return $this->options;
-    }
-
-    /**
      * Fill zero to initializing data on datasets
      * @return void
      */
     public function useFillZero() {
-        $this->fillZero = true;
-    }
-
-    /**
-     * Check is data must fill with zero value
-     * @return boolean 
-     */
-    public function usingFillZero() {
-        return $this->fillZero;
+        $this->useFillZero = true;
     }
 
     /**
@@ -108,15 +84,7 @@ class ChartJsLib {
      * @return void
      */
     public function useRainbowColor() {
-        $this->rainbowColor = true;
-    }
-
-    /**
-     * Check is chart using rainbowColor
-     * @return boolean
-     */
-    public function usingRainbowColor() {
-        return $this->rainbowColor;
+        $this->useRainbowColor = true;
     }
 
     /**
@@ -132,7 +100,7 @@ class ChartJsLib {
         $dataset = new ChartJsDataset($label);
         $this->datasets[$id] = $dataset;
 
-        if ($this->usingFillZero()) {
+        if ($this->useFillZero) {
             $dataset->setData(array_fill(0, count($this->labels), 0));
         }
 
@@ -182,18 +150,21 @@ class ChartJsLib {
 
         foreach ($this->datasets as $dataset) {
             $chartDataset = $dataset->getProperties();
+            $chartDataset['data'] = $dataset->getData();
+            
             if (strlen($dataset->getLabel()) > 0) {
                 $chartDataset['label'] = $dataset->getLabel();
             }
-            $chartDataset['data'] = $dataset->getData();
+
             
-            if ($this->usingRainbowColor()) {
+            if ($this->useRainbowColor) {
                 if (in_array($this->chartType, array('doughnut', 'pie', 'polarArea'))) {
                     $chartDataset['backgroundColor'] = array();
                     foreach ($chartDataset['data'] as $key => $value) {
                         array_push($chartDataset['backgroundColor'], $this->getCalcRainbow(count($chartDataset['data']), $index));
                         $index++;
                     }
+                    // Initialize index again for next dataset
                     $index = 1;
                 } else {
                     $color = $this->getCalcRainbow(count($this->datasets), $index);
