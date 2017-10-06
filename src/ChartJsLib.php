@@ -5,6 +5,11 @@ use YusrilHs\ChartJsHelper\ChartJsDataset;
 use InvalidArgumentException;
 
 class ChartJsLib {
+    /**
+     * HTMLElement ID
+     * @var string
+     */
+    protected $elementId = 'canvas';
 
     /**
      * Chart.js labels
@@ -197,6 +202,22 @@ class ChartJsLib {
         $blue = floor(sin($frequency * $index + 3) * (127) + 128);
 
         return sprintf('rgba(%s,%s,%s,.6)',$red, $green, $blue);
+    }
+
+    /**
+     * Set HTMLElement ID for chart
+     * @param string $id 
+     */
+    public function setElementId($id) {
+        $this->elementId = $id;
+    }
+
+    /**
+     * Retrieve HTMLElement ID
+     * @return string
+     */
+    public function getElementId() {
+        return $this->elementId;
     }
 
 }
