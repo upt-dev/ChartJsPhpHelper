@@ -10,20 +10,23 @@ A Simple Helper for Chart.js using PHP
 
 ## Usage
 #### Initialize Chart
-For initialize your chart
+For initialize your chart 
 ```php
 use YusrilHs\ChartJsHelper\ChartJsHelper;
 
-$chart = ChartJsHelper::createChart('line');
+$chart = ChartJsHelper::createChart('chart_line', 'line');
+
+// For get chart by id
+$chart = ChartJsHelper::getChart('chart_line');
 ```
-the argument on `createChart` is type of charts on Chart.Js see [here](http://www.chartjs.org/docs/latest/charts/)
+the first argument argument is chart id and second argument is type of charts on Chart.Js see [here](http://www.chartjs.org/docs/latest/charts/)
 
 #### Labels
 To add labels for your chart just add `setLabels`. For example:
 ```php
 use YusrilHs\ChartJsHelper\ChartJsHelper;
 
-$chart = ChartJsHelper::createChart('line');
+$chart = ChartJsHelper::createChart('chart_line', 'line');
 $chart->setLabels(array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'October', 'November', 'December'));
 ```
 #### Options
@@ -31,7 +34,7 @@ To add options for your chart just add `setOptions`. For example:
 ```php
 use YusrilHs\ChartJsHelper\ChartJsHelper;
 
-$chart = ChartJsHelper::createChart('line');
+$chart = ChartJsHelper::createChart('chart_line', 'line');
 // Set labels
 $chart->setLabels(array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'October', 'November', 'December'));
 // Set Options
@@ -48,7 +51,7 @@ Dataset is designed with key and value pair but you can use blank string on valu
 ```php
 use YusrilHs\ChartJsHelper\ChartJsHelper;
 
-$chart = ChartJsHelper::createChart('line');
+$chart = ChartJsHelper::createChart('chart_line', 'line');
 $chart->setLabels(array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'October', 'November', 'December'));
 // create dataset
 $visitor2017 = $chart->createDataset('visitor_2017', '2017');
@@ -100,7 +103,7 @@ Fill Zero will fill data on dataset with zero value. Data will have the same amo
 ```php
 use YusrilHs\ChartJsHelper\ChartJsHelper;
 
-$chart = ChartJsHelper::createChart('line');
+$chart = ChartJsHelper::createChart('chart_line', 'line');
 // Set labels of chart
 $chart->setLabels(array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'October', 'November', 'December'));
 // Activate fill zero
@@ -113,18 +116,30 @@ var_dump($visitor2017->getData());
 #### Rainbow Color
 If you are feeling lazy for coloring dataset. We come with automatic coloring feature. Just add `useRainbowColor` see [here](https://github.com/yusrilhs/ChartJsPhpHelper/tree/master/example). For example:
 ```php
-$chart = ChartJsHelper::createChart('line');
+$chart = ChartJsHelper::createChart('chart_line', 'line');
 // Activate rainbow color
 $chart->useRainbowColor();
 ```
-#### How to include into javascript?
-This library is just a helper for generating Chart.js using php. You can generate the chart configuration using `getConfig`. For example
+#### HTML Element id
+If you want specify selector of HTML element id, you can use `setElementId`. This is not required if you only need chart configuration. The default of HTML element id is `canvas`. For example: 
+```php
+use YusrilHs\ChartJsHelper\ChartJsHelper;
+
+$chart = ChartJsHelper::createChart('chart_line', 'line');
+$chart->setElementId('my_chart');
+
+// To get element id of chart
+$elementId = $chart->getElementId();
+```
+
+#### Generate code
+This library can help you for generating chart code with many choice. You can generate the chart configuration using `getConfig`. For example
 ```php
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Bar Chart Example</title>
+    <title>Chart Example</title>
 </head>
 <body>
     <canvas id="chart"></canvas>
@@ -138,6 +153,44 @@ This library is just a helper for generating Chart.js using php. You can generat
             window.barChart = new Chart(ctx, config);
         };
     </script>
+ </body>
+</html>
+```
+Still lazy to type a code?. You can get javascript code using `getScript` from `ChartJsHelper`. For example:
+```php
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Chart Example</title>
+</head>
+<body>
+    <canvas id="chart"></canvas>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js"></script>
+    <script type="text/javascript">
+        // Output prettified
+        <?= ChartJsHelper::getScript(); ?>
+        // Output compressed
+        <?= ChartJsHelper::getScript(true); ?>
+    </script>
+ </body>
+</html>
+```
+Still super lazy to type a code?. You can get javascript code with script tag using `createScriptTag` from `ChartJsHelper`. For example:
+```php
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Chart Example</title>
+</head>
+<body>
+    <canvas id="chart"></canvas>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js"></script>
+    // Output prettified
+    <?= ChartJsHelper::createScriptTag(); ?>
+    // Output compressed
+    <?= ChartJsHelper::createScriptTag(true); ?>
  </body>
 </html>
 ```
