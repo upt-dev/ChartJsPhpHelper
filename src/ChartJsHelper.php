@@ -2,7 +2,6 @@
 namespace YusrilHs\ChartJsHelper;
 
 use Camspiers\JsonPretty\JsonPretty;
-use JShrink\Minifier;
 use YusrilHs\ChartJsHelper\ChartJsLib;
 use InvalidArgumentException;
 
