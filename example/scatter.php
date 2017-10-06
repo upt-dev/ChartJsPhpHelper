@@ -98,8 +98,8 @@ $sampleData = array(
 
 require '../vendor/autoload.php';
 use YusrilHs\ChartJsHelper\ChartJsHelper;
-$chart = ChartJsHelper::createChart('scatter');
-$chart2 = ChartJsHelper::createChart('scatter');
+$chart = ChartJsHelper::createChart('scatter_1', 'scatter');
+$chart2 = ChartJsHelper::createChart('scatter_2', 'scatter');
 $chart->useFillZero();
 $chart2->useFillZero();
 $chart2->useRainbowColor();
@@ -110,6 +110,8 @@ $dataset->setData($sampleData);
 
 $dataset2 = $chart2->createDataset('voltage', 'V(node2)');
 $dataset2->setData($sampleData);
+$chart->setElementId('chart');
+$chart2->setElementId('chart2');
 ?>
 <!DOCTYPE html>
 <html>
@@ -121,54 +123,6 @@ $dataset2->setData($sampleData);
     <canvas id="chart"></canvas>
     <canvas id="chart2"></canvas>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js"></script>
-    <script type="text/javascript">
-        window.onload = function() {
-            var ctx = document.getElementById("chart").getContext("2d");
-            var ctx2 = document.getElementById("chart2").getContext("2d");
-            var config = <?= json_encode($chart->getConfig()); ?>;
-            var config2 = <?= json_encode($chart2->getConfig()); ?>;
-            var options = {
-                title: {
-                    display: true,
-                    text: 'Chart.js Scatter Chart - Logarithmic X-Axis'
-                },
-                scales: {
-                    xAxes: [{
-                        type: 'logarithmic',
-                        position: 'bottom',
-                        ticks: {
-                            userCallback: function(tick) {
-                                var remain = tick / (Math.pow(10, Math.floor(Chart.helpers.log10(tick))));
-                                if (remain === 1 || remain === 2 || remain === 5) {
-                                    return tick.toString() + "Hz";
-                                }
-                                return '';
-                            },
-                        },
-                        scaleLabel: {
-                            labelString: 'Frequency',
-                            display: true,
-                        }
-                    }],
-                    yAxes: [{
-                        type: 'linear',
-                        ticks: {
-                            userCallback: function(tick) {
-                                return tick.toString() + "dB";
-                            }
-                        },
-                        scaleLabel: {
-                            labelString: 'Voltage',
-                            display: true
-                        }
-                    }]
-                }
-            };
-            config.options = options;
-            config2.options = options;
-            window.scatter1 = new Chart(ctx, config);
-            window.scatter2 = new Chart(ctx2, config2);
-        };
-    </script>
+    <?= ChartJsHelper::createScriptTag(); ?>
 </body>
 </html>

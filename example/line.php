@@ -49,8 +49,8 @@ $colorMap = array(
 
 require '../vendor/autoload.php';
 use YusrilHs\ChartJsHelper\ChartJsHelper;
-$chart = ChartJsHelper::createChart('line');
-$chart2 = ChartJsHelper::createChart('line');
+$chart = ChartJsHelper::createChart('line_1', 'line');
+$chart2 = ChartJsHelper::createChart('line_2', 'line');
 $chart->setLabels(array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'October', 'November', 'December'));
 $chart2->setLabels(array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'October', 'November', 'December'));
 $chart->useFillZero();
@@ -74,6 +74,8 @@ foreach ($sampleData as $data) {
 foreach ($colorMap as $key => $value) {
     $chart->dataset($key)->setProperties($value);
 }
+$chart->setElementId('chart');
+$chart2->setElementId('chart2');
 ?>
 <!DOCTYPE html>
 <html>
@@ -85,48 +87,6 @@ foreach ($colorMap as $key => $value) {
     <canvas id="chart"></canvas>
     <canvas id="chart2"></canvas>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js"></script>
-    <script type="text/javascript">
-        window.onload = function() {
-            var ctx = document.getElementById("chart").getContext("2d");
-            var ctx2 = document.getElementById("chart2").getContext("2d");
-            var config = <?= json_encode($chart->getConfig()); ?>;
-            var config2 = <?= json_encode($chart2->getConfig()); ?>;
-            var options = {
-                responsive: true,
-                title:{
-                    display:true,
-                    text:'Chart.js Line Chart'
-                },
-                tooltips: {
-                    mode: 'index',
-                    intersect: false,
-                },
-                hover: {
-                    mode: 'nearest',
-                    intersect: true
-                },
-                scales: {
-                    xAxes: [{
-                        display: true,
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Month'
-                        }
-                    }],
-                    yAxes: [{
-                        display: true,
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Value'
-                        }
-                    }]
-                }
-            };
-            config.options = options;
-            config2.options = options;
-            window.line1 = new Chart(ctx, config);
-            window.line2 = new Chart(ctx2, config2);
-        };
-    </script>
+    <?= ChartJsHelper::createScriptTag(); ?>
 </body>
 </html>

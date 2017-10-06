@@ -50,8 +50,8 @@ $colorMap = array(
 
 require '../vendor/autoload.php';
 use YusrilHs\ChartJsHelper\ChartJsHelper;
-$chart = ChartJsHelper::createChart('bubble');
-$chart2 = ChartJsHelper::createChart('bubble');
+$chart = ChartJsHelper::createChart('bubble_1', 'bubble');
+$chart2 = ChartJsHelper::createChart('bubble_2', 'bubble');
 $chart2->useRainbowColor();
 
 foreach ($sampleData as $data) {
@@ -79,6 +79,9 @@ foreach ($sampleData as $data) {
 foreach ($colorMap as $key => $value) {
     $chart->dataset($key)->setProperties($value);
 }
+
+$chart->setElementId('chart');
+$chart2->setElementId('chart2');
 ?>
 <!DOCTYPE html>
 <html>
@@ -90,32 +93,6 @@ foreach ($colorMap as $key => $value) {
     <canvas id="chart"></canvas>
     <canvas id="chart2"></canvas>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js"></script>
-    <script type="text/javascript">
-        window.onload = function() {
-            var ctx = document.getElementById("chart").getContext("2d");
-            var ctx2 = document.getElementById("chart2").getContext("2d");
-            var config = <?= json_encode($chart->getConfig()); ?>;
-            var config2 = <?= json_encode($chart2->getConfig()); ?>;
-            var options = {
-                responsive: true,
-                title:{
-                    display:true,
-                    text:'Chart.js Bubble Chart'
-                },
-                tooltips: {
-                    mode: 'index',
-                    intersect: false,
-                },
-                hover: {
-                    mode: 'nearest',
-                    intersect: true
-                }
-            };
-            config.options = options;
-            config2.options = options;
-            window.bubble1 = new Chart(ctx, config);
-            window.bubble2 = new Chart(ctx2, config2);
-        };
-    </script>
+   <?= ChartJsHelper::createScriptTag(); ?>
 </body>
 </html>

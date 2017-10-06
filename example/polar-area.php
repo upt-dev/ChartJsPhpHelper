@@ -12,8 +12,8 @@ $colorMap = array(
 
 require '../vendor/autoload.php';
 use YusrilHs\ChartJsHelper\ChartJsHelper;
-$chart = ChartJsHelper::createChart('polarArea');
-$chart2 = ChartJsHelper::createChart('polarArea');
+$chart = ChartJsHelper::createChart('polar_1', 'polarArea');
+$chart2 = ChartJsHelper::createChart('polar_2','polarArea');
 $chart->setLabels(array('Like', 'Hate', 'Simple'));
 $chart2->setLabels(array('Like','Hate','Simple'));
 $chart->useFillZero();
@@ -25,6 +25,8 @@ $dataset2 = $chart2->createDataset('vote', 'vote');
 $dataset->setData(array_values($sampleData));
 $dataset2->setData(array_values($sampleData));
 $dataset->setProperties(array('backgroundColor'=> array_values($colorMap)));
+$chart->setElementId('chart');
+$chart2->setElementId('chart2');
 ?>
 <!DOCTYPE html>
 <html>
@@ -36,32 +38,6 @@ $dataset->setProperties(array('backgroundColor'=> array_values($colorMap)));
     <canvas id="chart"></canvas>
     <canvas id="chart2"></canvas>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js"></script>
-    <script type="text/javascript">
-        window.onload = function() {
-            var ctx = document.getElementById("chart").getContext("2d");
-            var ctx2 = document.getElementById("chart2").getContext("2d");
-            var config = <?= json_encode($chart->getConfig()); ?>;
-            var config2 = <?= json_encode($chart2->getConfig()); ?>;
-            var options = {
-                responsive: true,
-                title:{
-                    display:true,
-                    text:'Chart.js Polar Area Chart'
-                },
-                tooltips: {
-                    mode: 'index',
-                    intersect: false,
-                },
-                hover: {
-                    mode: 'nearest',
-                    intersect: true
-                }
-            };
-            config.options = options;
-            config2.options = options;
-            window.polarArea1 = new Chart(ctx, config);
-            window.polarArea2 = new Chart(ctx2, config2);
-        };
-    </script>
+    <?= ChartJsHelper::createScriptTag(); ?>
 </body>
 </html>

@@ -49,8 +49,8 @@ $colorMap = array(
 
 require '../vendor/autoload.php';
 use YusrilHs\ChartJsHelper\ChartJsHelper;
-$chart = ChartJsHelper::createChart('radar');
-$chart2 = ChartJsHelper::createChart('radar');
+$chart = ChartJsHelper::createChart('radar_1', 'radar');
+$chart2 = ChartJsHelper::createChart('radar_2', 'radar');
 $chart->setLabels(array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'October', 'November', 'December'));
 $chart2->setLabels(array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'October', 'November', 'December'));
 $chart->useFillZero();
@@ -74,6 +74,8 @@ foreach ($sampleData as $data) {
 foreach ($colorMap as $key => $value) {
     $chart->dataset($key)->setProperties($value);
 }
+$chart->setElementId('chart');
+$chart2->setElementId('chart2');
 ?>
 <!DOCTYPE html>
 <html>
@@ -85,32 +87,6 @@ foreach ($colorMap as $key => $value) {
     <canvas id="chart"></canvas>
     <canvas id="chart2"></canvas>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js"></script>
-    <script type="text/javascript">
-        window.onload = function() {
-            var ctx = document.getElementById("chart").getContext("2d");
-            var ctx2 = document.getElementById("chart2").getContext("2d");
-            var config = <?= json_encode($chart->getConfig()); ?>;
-            var config2 = <?= json_encode($chart2->getConfig()); ?>;
-            var options = {
-                responsive: true,
-                title:{
-                    display:true,
-                    text:'Chart.js Radar'
-                },
-                tooltips: {
-                    mode: 'index',
-                    intersect: false,
-                },
-                hover: {
-                    mode: 'nearest',
-                    intersect: true
-                }
-            };
-            config.options = options;
-            config2.options = options;
-            window.radar1 = new Chart(ctx, config);
-            window.radar2 = new Chart(ctx2, config2);
-        };
-    </script>
+    <?= ChartJsHelper::createScriptTag(); ?>
 </body>
 </html>
