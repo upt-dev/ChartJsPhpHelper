@@ -7,7 +7,10 @@ php:
   - 7.1
   - nightly
 
-before_script: composer dump-autoload
+before_script: 
+  - composer self-update
+  - composer install --no-dev
+  - composer dump-autoload
 
 script: phpunit --coverage-clover=coverage.xml
 
