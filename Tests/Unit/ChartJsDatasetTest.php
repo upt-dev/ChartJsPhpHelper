@@ -5,13 +5,13 @@ use YusrilHs\ChartJsHelper\ChartJsHelper;
 class ChartJsDatasetTest extends TestCase {
 
     public function testGetLabel() {
-        $chart = ChartJsHelper::createChart('line');
+        $chart = ChartJsHelper::createChart('line_test_get_label', 'line');
         $dataset = $chart->createDataset('data_january', 'January');
         $this->assertEquals($dataset->getLabel(), 'January');
     }
 
     public function testSetProperty() {
-        $chart = ChartJsHelper::createChart('line');
+        $chart = ChartJsHelper::createChart('line_test_set_property', 'line');
         $dataset = $chart->createDataset('data_january', 'January');
         $dataset->setProperty('backgroundColor', 'rgba(0,0,0,.4)');
         $this->assertEquals($dataset->getProperties(), array('backgroundColor'=> 'rgba(0,0,0,.4)'));
@@ -35,7 +35,7 @@ class ChartJsDatasetTest extends TestCase {
     }
 
     public function testSetProperties() {
-        $chart = ChartJsHelper::createChart('line');
+        $chart = ChartJsHelper::createChart('line_test_set_properties', 'line');
         $dataset = $chart->createDataset('data_january', 'January');
         $dataset->setProperties(array(
                         'backgroundColor' => 'rgba(0,0,0,.4)', 
@@ -58,7 +58,7 @@ class ChartJsDatasetTest extends TestCase {
     }
 
     public function testSetPropertiesUsingSequenceArray() {
-        $chart = ChartJsHelper::createChart('line');
+        $chart = ChartJsHelper::createChart('line_test_set_properties_sequence_arr', 'line');
         $dataset = $chart->createDataset('data_january', 'January');
         $this->expectException('InvalidArgumentException');
         $dataset->setProperties(array(
@@ -70,7 +70,7 @@ class ChartJsDatasetTest extends TestCase {
     }
 
     public function testSetPropertiesWithDataAndLabel() {
-        $chart = ChartJsHelper::createChart('line');
+        $chart = ChartJsHelper::createChart('line_test_set_properties_with_data_label', 'line');
         $dataset = $chart->createDataset('data_january', 'January');
         $this->expectException('InvalidArgumentException');
         $dataset->setProperties(array(
@@ -82,7 +82,7 @@ class ChartJsDatasetTest extends TestCase {
     }
 
     public function testSetData() {
-        $chart = ChartJsHelper::createChart('line');
+        $chart = ChartJsHelper::createChart('line_test_set_data', 'line');
         $chart->setLabels(array('January', 'February', 'Maret', 'April'));
         $dataset = $chart->createDataset('2017', '2017');
         $dataset->setData(array(4, 10, 2, 13));
@@ -100,7 +100,7 @@ class ChartJsDatasetTest extends TestCase {
     }
 
     public function testAppendData() {
-        $chart = ChartJsHelper::createChart('line');
+        $chart = ChartJsHelper::createChart('line_test_append_data', 'line');
         $chart->setLabels(array('January', 'February', 'Maret', 'April'));
         $dataset = $chart->createDataset('2017', '2017');
         $dataset->appendData(20);

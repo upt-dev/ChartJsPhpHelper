@@ -1,18 +1,19 @@
 <?php 
 use PHPUnit\Framework\TestCase;
 use YusrilHs\ChartJsHelper\ChartJsHelper;
+use JShrink\Minifier;
 
 class ChartJsHelperTest extends TestCase {
 
     public function testCreateChart() {
-        $barChart = ChartjsHelper::createChart('bar');
-        $bubbleChart = ChartjsHelper::createChart('bubble');
-        $doughnutChart = ChartjsHelper::createChart('doughnut');
-        $lineChart = ChartjsHelper::createChart('line');
-        $pieChart = ChartjsHelper::createChart('pie');
-        $polarChart = ChartjsHelper::createChart('polarArea');
-        $radarChart = ChartjsHelper::createChart('radar');
-        $scatterChart = ChartjsHelper::createChart('scatter');
+        $barChart = ChartjsHelper::createChart('bar', 'bar');
+        $bubbleChart = ChartjsHelper::createChart('bubble', 'bubble');
+        $doughnutChart = ChartjsHelper::createChart('doughnut', 'doughnut');
+        $lineChart = ChartjsHelper::createChart('line', 'line');
+        $pieChart = ChartjsHelper::createChart('pie', 'pie');
+        $polarChart = ChartjsHelper::createChart('polarArea', 'polarArea');
+        $radarChart = ChartjsHelper::createChart('radar', 'radar');
+        $scatterChart = ChartjsHelper::createChart('scatter', 'scatter');
 
         // Test instance of each chart
         $this->assertInstanceOf('YusrilHs\\ChartjsHelper\\ChartJsLib', $barChart);
@@ -21,14 +22,197 @@ class ChartJsHelperTest extends TestCase {
         $this->assertInstanceOf('YusrilHs\\ChartjsHelper\\ChartJsLib', $pieChart);
         $this->assertInstanceOf('YusrilHs\\ChartjsHelper\\ChartJsLib', $polarChart);
         $this->assertInstanceOf('YusrilHs\\ChartjsHelper\\ChartJsLib', $radarChart);
+    }
 
-        try {
-            $invalidChart = ChartjsHelper::createChart('invalid chart');
-        } catch(InvalidArgumentException $e) {
-            return;
+    public function testCreateChartException() {
+        $invalidIds = array(
+            '12aabc',
+            'hell-err',
+            'my chart',
+            '__-__'
+        );
+
+        $invalidChartTypes = array(
+            'line1' => 'line1',
+            'polar' => 'polar',
+            'bars' => 'bars'
+        );
+        
+        foreach ($invalidIds as $invalidId) {
+            try {
+                ChartjsHelper::createChart($invalidId, 'line');
+                $this->fail(sprintf('No Exception thrown with id: %s', $invalidId));
+            } catch(Exception $e) {
+                $this->assertInstanceOf('InvalidArgumentException', $e);
+            }
         }
 
-        $this->fail();
+        try {
+            ChartJsHelper::createChart('line', 'line');
+            $this->fail('Exception not thrown while same chart id defined');
+        } catch(Exception $e) {
+            $this->assertInstanceOf('InvalidArgumentException', $e);
+        }
+
+        foreach ($invalidChartTypes as $key => $value) {
+            try {
+                ChartJsHelper::createChart($key, $value);
+                $this->fail('Exception not thrown while unknown chart type defined');
+            } catch(Exception $e) {
+                $this->assertInstanceOf('InvalidArgumentException', $e);
+            }
+        }
+    }
+
+    public function testGetChart() {
+        $chart = ChartjsHelper::createChart('test_get_chart', 'bar');
+        $this->assertEquals($chart, ChartjsHelper::getChart('test_get_chart'));
+        
+        try {
+            $chart = ChartjsHelper::getChart('test_get_charts');
+            $this->fail('Exception not thrown on unknown chart id');
+        } catch(Exception $e) {
+            $this->assertInstanceOf('InvalidArgumentException', $e);
+        }
+    }
+
+    public function testGetAndCreateScript() {
+        ChartJsHelper::flushCharts();
+        $chart = ChartJsHelper::createChart('bar_1', 'bar');
+        $chart->setElementId('chart');
+        $chart->setLabels(array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'October', 'November', 'December'));
+        $chart->useFillZero();
+        $chart->useRainbowColor();
+        $sampleData = $this->getSampleData();
+
+        foreach ($sampleData as $data) {
+            $dataset = $chart->hasDataset($data['year']) ?
+                            $chart->dataset($data['year']) :
+                            $chart->createDataset($data['year'], $data['year']);
+            $dataset->setData($data['month'] - 1, $data['value']);
+        }
+        $output = ChartJsHelper::getScript();
+        // Translate tab to space
+        $realOutput = str_replace("\t", '    ',  $output);
+        $this->assertEquals($this->getScriptResult(), $realOutput);
+        $header = substr($output, 0, 81);
+        $contentJs = substr($output, 81);
+        $this->assertEquals(
+            $header . str_replace(array("\n","\t", ' '), '', $contentJs), 
+            ChartJsHelper::getScript(true)
+        );
+        $scripTag = ChartJsHelper::createScriptTag();
+        $match = preg_match('/<script type\=\"text\/javascript">(.|\n)*?<\/script>/m', $scripTag);
+        $this->assertEquals($match, 1);
+        $outputScriptTag = sprintf("<script type=\"text/javascript\">\n(function(window) {\n%s}(window));\n</script>", $output);
+        $this->assertEquals($scripTag, $outputScriptTag);
+    }
+
+    public function getScriptResult() {
+        return '// Generated by ChartJsPhpHelper
+// https://github.com/yusrilhs/ChartJsPhpHelper
+var __chart_context_bar_1 = document.getElementById("chart").getContext("2d");
+var __chart_config_bar_1 = {
+    "type": "bar",
+    "data": {
+        "datasets": [
+            {
+                "data": [
+                    30,
+                    20,
+                    0,
+                    10,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "label": 2017,
+                "backgroundColor": "rgba(145,31,92,.6)",
+                "borderColor": "rgba(145,31,92,.6)"
+            },
+            {
+                "data": [
+                    11,
+                    0,
+                    0,
+                    0,
+                    23,
+                    14,
+                    0,
+                    0,
+                    0,
+                    0,
+                    29
+                ],
+                "label": 2018,
+                "backgroundColor": "rgba(92,211,180,.6)",
+                "borderColor": "rgba(92,211,180,.6)"
+            }
+        ],
+        "labels": [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "October",
+            "November",
+            "December"
+        ]
+    }
+};
+
+window.onload = function() {
+window.__chart_bar_1 = new Chart(__chart_context_bar_1, __chart_config_bar_1);
+};
+';
+    }
+
+    private function getSampleData() {
+        return array(
+            array(
+                'year'=> 2017,
+                'month'=> 1,
+                'value'=> 30
+            ),
+            array(
+                'year'=> 2017,
+                'month'=> 2,
+                'value'=> 20
+            ),
+            array(
+                'year'=> 2017,
+                'month'=> 4,
+                'value'=> 10
+            ),
+            array(
+                'year'=> 2018,
+                'month'=> 6,
+                'value'=> 14
+            ),
+            array(
+                'year'=> 2018,
+                'month'=> 5,
+                'value'=> 23
+            ),
+            array(
+                'year'=> 2018,
+                'month'=> 1,
+                'value'=> 11
+            ),
+            array(
+                'year'=> 2018,
+                'month'=> 11,
+                'value'=> 29
+            )
+        );
     }
     
 }

@@ -10,7 +10,7 @@ class ChartJsLibTest extends TestCase {
             '02'=>'February'
         );
 
-        $chart = ChartjsHelper::createChart('line');
+        $chart = ChartjsHelper::createChart('line_set_labels', 'line');
         $chart->setLabels($labels);
         $config = $chart->getConfig();
 
@@ -55,14 +55,14 @@ class ChartJsLibTest extends TestCase {
             )
         );
 
-        $chart = ChartjsHelper::createChart('line');
+        $chart = ChartjsHelper::createChart('line_test_set_options', 'line');
         $chart->setOptions($options);
         $config = $chart->getConfig();
         $this->assertEquals($options, $config['options']);
     }
 
     public function testUseFillZero() {
-        $chart = ChartJsHelper::createChart('line');
+        $chart = ChartJsHelper::createChart('line_test_use_fill_zero', 'line');
         $labels = array('January', 'February');
         $chart->setLabels($labels);
         $chart->useFillZero();
@@ -75,7 +75,7 @@ class ChartJsLibTest extends TestCase {
     }
 
     public function testUseRainbowColor() {
-        $chart = ChartJsHelper::createChart('line');
+        $chart = ChartJsHelper::createChart('line_test_use_rainbow_color', 'line');
         $chart->setLabels(array('January', 'February', 'March', 'April'));
         $chart->useFillZero();
         $dataset = $chart->createDataset('2017','2017');
@@ -89,7 +89,7 @@ class ChartJsLibTest extends TestCase {
     }
 
     public function testCreateDataset() {
-        $chart = ChartjsHelper::createChart('line');
+        $chart = ChartjsHelper::createChart('line_test_create_dataset', 'line');
         $dataset = $chart->createDataset('2017', '2017');
         $this->assertEquals($chart->hasDataset('2017'), true);
         $this->assertEquals($chart->dataset('2017'), $dataset);
@@ -104,7 +104,7 @@ class ChartJsLibTest extends TestCase {
     }
 
     public function testInvalidDataset() {
-        $chart = ChartjsHelper::createChart('line');
+        $chart = ChartjsHelper::createChart('line_test_invalid_dataset', 'line');
         
         $this->expectException('InvalidArgumentException');
         $chart->dataset('2018');
@@ -145,7 +145,7 @@ class ChartJsLibTest extends TestCase {
         );
         $indonesianChartData = array(rand(), rand(), rand(), rand(), rand(), rand(), rand(), rand(), rand(), rand(), rand(), rand());
         $englishChartData = array(rand(), rand(), rand(), rand(), rand(), rand(), rand(), rand(), rand(), rand(), rand(), rand());
-        $chart = ChartJsHelper::createChart('line');
+        $chart = ChartJsHelper::createChart('line_test_get_config', 'line');
         $chart->setLabels($labels);
         $chart->setOptions($options);
         $chart->useRainbowColor();
@@ -158,6 +158,7 @@ class ChartJsLibTest extends TestCase {
         $config = $chart->getConfig();
         $this->assertEquals($config['data']['labels'], $labels);
         $this->assertEquals(count($config['data']['datasets']), 2);
+        $this->assertEquals(count($config['data']['datasets'][0]['data']), 12);
         $this->assertEquals($config['options'], $options);
     }
 
@@ -173,8 +174,8 @@ class ChartJsLibTest extends TestCase {
             'Simple'=> 'rgba(82,203,56,.6)'
         );
         
-        $chart = ChartJsHelper::createChart('pie');
-        $chart2 = ChartJsHelper::createChart('pie');
+        $chart = ChartJsHelper::createChart('pie_test_get_config_pie1', 'pie');
+        $chart2 = ChartJsHelper::createChart('pie_test_get_config_pie2', 'pie');
 
         $chart->setLabels(array_keys($sampleData));
         $chart2->setLabels(array_keys($sampleData));
@@ -198,5 +199,12 @@ class ChartJsLibTest extends TestCase {
 
         $this->assertEquals(count($config['data']['datasets'][0]['backgroundColor']), count($sampleData));
         $this->assertEquals(count($config2['data']['datasets'][0]['backgroundColor']), count($sampleData));
+    }
+
+    public function testSetElementId() {
+        $chart = ChartjsHelper::createChart('test_set_element_id', 'line');
+        $this->assertEquals('canvas', $chart->getElementId());
+        $chart->setElementId('line_chart');
+        $this->assertEquals('line_chart', $chart->getElementId());
     }
 }
