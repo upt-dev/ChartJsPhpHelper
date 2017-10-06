@@ -112,7 +112,11 @@ class ChartJsHelper {
         return $header . $script;
     }
 
-    public function flushCharts() {
+    /**
+     * Flush charts
+     * @return void
+     */
+    public static function flushCharts() {
         self::$charts = array();
     }
 }
