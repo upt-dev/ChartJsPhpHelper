@@ -19,6 +19,7 @@ class ChartJsHelper {
      */
     private static $allowedChartType = array(
         'bar',
+        'horizontalBar',
         'doughnut',
         'line',
         'pie',
